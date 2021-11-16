@@ -1,10 +1,10 @@
 import {Box} from '@chakra-ui/layout'
-import Tabla from '../components/tabla';
+import TablaDescargas from '../components/tablaDescarga';
 
 const MisDescargas = (props) => {
   return (
-    <Box p={50}>
-      <Tabla />
+    <Box p={5}>
+      <TablaDescargas />
     </Box>
   );
 };
