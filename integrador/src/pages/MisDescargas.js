@@ -37,9 +37,24 @@ export default function MisDescargas() {
 
   const toast = useToast()
 
+  const tryWithToast = (cb) => {
+    try {
+      cb()
+    } catch (error) {
+      console.log(error)
+      toast({
+        title: '¡Ha ocurrido un error!',
+        status: 'error',
+        description: 'No se ha podido conectar al backend.',
+        position: 'top',
+        isClosable: true,
+      })
+    }
+  }
+
   useEffect(() => {
-    const traerDescargas = async () => {
-      try {
+    const traerDescargas = () => {
+      tryWithToast ( async () => {
         const descargasUsuarioJSON = await descargasService.getDescargasUsuario(ID_USUARIO_DEMO)
         //console.log(descargasUsuarioJSON)
         const listaDescargas = []
@@ -65,29 +80,31 @@ export default function MisDescargas() {
         // // console.log(infoPanels)
         // setInfoPanels([...exportPanels])
         // // console.log(infoPanels)
-      } catch (error) {
-        console.log(error)
-        toast({
-          title: '¡Ha ocurrido un error!',
-          status: 'error',
-          description: 'No se ha podido conectar al backend.',
-          position: 'top',
-          isClosable: true,
-        })
       }
-    }
+    )
+  }
 
     traerDescargas()
   }, [])
 
   function abrirModal (id_encuesta) {
-    console.log("id_encuesta:" + id_encuesta)
-    setPuntajeEncuesta(2)
-    setResPositivoDescarga("Hola")
-    setResNegativoDescarga("Que")
-    setResPositivoPlataforma("Tal")
-    setResNegativoPlataforma("Como Te Va")
-    onOpen()
+    tryWithToast( async () => {
+      const encuestaDescargaJSON = await descargasService.getDescargasUsuario(ID_USUARIO_DEMO)
+      const encuestaDescarga = encuestaDescargaJSON.data.data
+      setPuntajeEncuesta(encuestaDescarga.puntajeGlobalEncuesta)
+      setResPositivoDescarga(encuestaDescarga.resumenPositivoDescarga)
+      setResNegativoDescarga(encuestaDescarga.resumenNegativoDescarga)
+      setResPositivoPlataforma(encuestaDescarga.resumenPositivoPlataforma)
+      setResNegativoPlataforma(encuestaDescarga.resumenNegativoPlataforma)
+      onOpen()
+    } )
+    // console.log("id_encuesta:" + id_encuesta)
+    // setPuntajeEncuesta(2)
+    // setResPositivoDescarga("Hola")
+    // setResNegativoDescarga("Que")
+    // setResPositivoPlataforma("Tal")
+    // setResNegativoPlataforma("Como Te Va")
+    // onOpen()
   }
 
   return (
