@@ -1,21 +1,29 @@
-import {HStack, VStack} from "@chakra-ui/react"
+import { HStack, VStack } from "@chakra-ui/react";
 import { SimpleGrid, Box } from "@chakra-ui/react";
-import { AspectRatio } from "@chakra-ui/layout";
+import { AspectRatio, Center } from "@chakra-ui/layout";
+import Botones from "../components/botones.js";
 
 const TablaDescargas = () => {
   return (
-      <SimpleGrid columns={1} spacingX="40px" spacingY="20px">
-        <HStack h={20}>
-        <AspectRatio ratio={1}>
-        <Box bg="tomato" w="20%"> Icono</Box>
-        </AspectRatio>
-        <VStack bg="tomato" w="45%">
-        <Box h="50%"> Titulo</Box>
-        <Box h="50%"> Fecha</Box>
-        </VStack>
-        <Box bg="tomato" w="35%"> c</Box>
+    <Center>
+      <VStack w="60%">
+        <HStack h={20} w="100%" spacing={0}>
+          {/* <AspectRatio ratio={1}> */}
+            <Box bg="tomato" w="20%" h="100%">
+              Icono
+            </Box>
+          {/* </AspectRatio> */}
+          <VStack bg="tomato" w="45%">
+            <Box h="50%"> Titulo</Box>
+            <Box h="50%"> Fecha</Box>
+          </VStack>
+            <VStack bg="tomato" w="45%">
+              <Box h="50%"> Stars</Box>
+              <Box h="50%"> <Botones/> </Box>
+            </VStack>
         </HStack>
-      </SimpleGrid>
+      </VStack>
+    </Center>
   );
 };
 export default TablaDescargas;
