@@ -1,19 +1,110 @@
-import {Box} from '@chakra-ui/layout'
-import TablaDescargas from '../components/tablaDescarga'
-
-export default function MisDescargas () {
+import { Button } from "@chakra-ui/button";
+import React from "react";
+import { Box } from "@chakra-ui/layout";
+import TablaDescargas from "../components/tablaDescarga";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
+import { FormControl } from "@chakra-ui/form-control";
+import { FormLabel } from "@chakra-ui/form-control";
+import { Input } from "@chakra-ui/input";
+import { useDisclosure } from "@chakra-ui/hooks";
+export default function MisDescargas() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box p={2} bg="green.800">
-      <TablaDescargas/>
-      <TablaDescargas/>
-      <TablaDescargas/>
-      <TablaDescargas/>
-      <TablaDescargas/>
-      <TablaDescargas/>
-      <TablaDescargas/>
-      <TablaDescargas/>
-      <TablaDescargas/>
-      <TablaDescargas/>
+      <TablaDescargas />
+      <Button onClick={onOpen}>...</Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create your account</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl>
+              <FormLabel>First name</FormLabel>
+              <Input placeholder="First name" />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Last name</FormLabel>
+              <Input placeholder="Last name" />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>First name</FormLabel>
+              <Input placeholder="First name" />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>First name</FormLabel>
+              <Input placeholder="First name" />
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3}>
+              Save
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
-  )
+  );
+}
+function InitialFocus() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const initialRef = React.useRef();
+  const finalRef = React.useRef();
+
+  return (
+    <>
+      <Button onClick={onOpen}>Open Modal</Button>
+      <Button ml={4} ref={finalRef}>
+        I'll receive focus on close
+      </Button>
+
+      <Modal
+        initialFocusRef={initialRef}
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create your account</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl>
+              <FormLabel>First name</FormLabel>
+              <Input ref={initialRef} placeholder="First name" />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Last name</FormLabel>
+              <Input placeholder="Last name" />
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3}>
+              Save
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
 }

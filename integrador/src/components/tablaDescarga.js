@@ -5,7 +5,7 @@ import Botones from "../components/botones.js";
 import { StarIcon} from "@chakra-ui/icons";
 
 
-const TablaDescargas = () => {
+const TablaDescargas = (props) => {
   return (
     <Center>
       <VStack w="60%">
