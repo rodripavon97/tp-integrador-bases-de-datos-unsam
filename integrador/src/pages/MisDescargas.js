@@ -31,23 +31,23 @@ export default function MisDescargas() {
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
-              <FormLabel>First name</FormLabel>
-              <Input placeholder="First name" />
+              <FormLabel>¿Que cosas positivas encontraste sobre la descarga?</FormLabel>
+              <Input placeholder="..." />
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Last name</FormLabel>
-              <Input placeholder="Last name" />
+              <FormLabel>¿Que cosas positivas encontraste sobre la plataforma?</FormLabel>
+              <Input placeholder="..." />
             </FormControl>
 
             <FormControl>
-              <FormLabel>First name</FormLabel>
-              <Input placeholder="First name" />
+              <FormLabel>¿Que cosas negativas encontraste sobre la descarga?</FormLabel>
+              <Input placeholder="..." />
             </FormControl>
 
             <FormControl>
-              <FormLabel>First name</FormLabel>
-              <Input placeholder="First name" />
+              <FormLabel>¿Que cosas negativas encontraste sobre la plataforma?</FormLabel>
+              <Input placeholder="..." />
             </FormControl>
           </ModalBody>
 
