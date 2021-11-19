@@ -23,20 +23,20 @@ const TablaDescargas = (props) => {
   return (
     <Center py={3}>
       <VStack w="60%">
-        <HStack h={20} w="100%" spacing={0} alignItems="stretch">
+        <HStack h={20} w="100%" spacing={0} alignItems="stretch" bg="#57cbc5">
           {/* <AspectRatio ratio={1}> */}
-            <Center bg="tomato" w="20%">
+            <Center w="20%">
               <FetchedIcon
                 name={props.tipoContenido}
                 fontSize="4em"
               />
             </Center>
           {/* </AspectRatio> */}
-          <VStack bg="tomato" w="45%" justifyContent="space-evenly" alignItems="flex-start">
+          <VStack w="45%" justifyContent="space-evenly" alignItems="flex-start">
             <Box>{props.titulo}</Box>
             <Box>{props.fechaDescarga}</Box>
           </VStack>
-            <VStack bg="tomato" w="45%" justifyContent="space-evenly">
+            <VStack w="45%" justifyContent="space-evenly">
               <Box justifyContent="center"> {/* FIXIT: Duele ese w */}
                 <Rating
                   size={1.25}
