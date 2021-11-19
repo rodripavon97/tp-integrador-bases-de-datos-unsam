@@ -1,6 +1,7 @@
 import { Button } from "@chakra-ui/button"
-import React from "react"
-import { Box, Heading, HStack, VStack } from "@chakra-ui/layout"
+import React, { useState, useEffect } from "react"
+import { useDisclosure } from "@chakra-ui/hooks"
+import { useToast } from "@chakra-ui/toast"
 import TablaDescargas from "../components/tablaDescarga"
 import {
   Modal,
@@ -10,22 +11,74 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Textarea
 } from "@chakra-ui/react"
-import { FormControl } from "@chakra-ui/form-control"
-import { FormLabel } from "@chakra-ui/form-control"
-import { useDisclosure } from "@chakra-ui/hooks"
-import { Textarea } from "@chakra-ui/react"
+import { Box, Heading, HStack, VStack } from "@chakra-ui/layout"
+import { FormControl, FormLabel } from "@chakra-ui/form-control"
+
 import Rating from "../components/Rating"
-import { useState } from "react"
+
+import { descargasService } from "../services/descargasService"
+import { ID_USUARIO_DEMO } from "../services/_constantes"
+
+
+
 export default function MisDescargas() {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const [descargasUsuario, setDescargasUsuario] = useState([])
 
   const [puntajeEncuesta, setPuntajeEncuesta] = useState(0)
   const [resPositivoDescarga, setResPositivoDescarga] = useState('')
   const [resNegativoDescarga, setResNegativoDescarga] = useState('')
   const [resPositivoPlataforma, setResPositivoPlataforma] = useState('')
   const [resNegativoPlataforma, setResNegativoPlataforma] = useState('')
+
+  const toast = useToast()
+
+  useEffect(() => {
+    const traerDescargas = async () => {
+      try {
+        const descargasUsuarioJSON = await descargasService.getDescargasUsuario(ID_USUARIO_DEMO)
+        //console.log(descargasUsuarioJSON)
+        const listaDescargas = []
+        for (var descarga of descargasUsuarioJSON.data.data) {
+          listaDescargas.push(descarga)
+        }
+        console.log(listaDescargas)
+        setDescargasUsuario([...listaDescargas])
+        // const pushearPanel = (panel, icono) => {
+        //   exportPanels.push({
+        //     title: panel.title,
+        //     value: panel.value,
+        //     icon: icono
+        //   })
+        // }
+        // const exportPanels = []
+        // for(panel of infoPanelsJSON.infoUsuarios) {
+        //   pushearPanel(panel, MdGroups)
+        // }
+        // for(panel of infoPanelsJSON.infoRutinas) {
+        //   pushearPanel(panel, FaDumbbell)
+        // }
+        // // console.log(infoPanels)
+        // setInfoPanels([...exportPanels])
+        // // console.log(infoPanels)
+      } catch (error) {
+        console.log(error)
+        toast({
+          title: '¡Ha ocurrido un error!',
+          status: 'error',
+          description: 'No se ha podido conectar al backend.',
+          position: 'top',
+          isClosable: true,
+        })
+      }
+    }
+
+    traerDescargas()
+  }, [])
 
   function abrirModal (id_encuesta) {
     console.log("id_encuesta:" + id_encuesta)
@@ -41,12 +94,14 @@ export default function MisDescargas() {
     <Box p={2} bg="green.800" minH="100%">
       <Heading textAlign="center" color="white" pt={6} pb={12}>Mis Encuestas</Heading>
 
-      <TablaDescargas tipoContenido="Mus" puntajeEncuesta="5" />
+      {descargasUsuario.map( (desc) => <TablaDescargas idDescarga={desc.idDescarga} titulo={desc.titulo} fechaDescarga={desc.fechaDescarga} tipoContenido={desc.tipoContenido} puntajeEncuesta={desc.puntajeEncuesta} onButtonClick={() => abrirModal(desc.idDescarga)} /> )}
+
+      {/* <TablaDescargas tipoContenido="Mus" puntajeEncuesta="5" />
       <TablaDescargas idDescarga="7" tipoContenido="Doc" puntajeEncuesta="2" onButtonClick={() => abrirModal(7)} />
       <TablaDescargas tipoContenido="Vid" puntajeEncuesta="0" />
 
 
-      <Button onClick={onOpen}>...</Button>
+      <Button onClick={onOpen}>...</Button> */}
 
 
 

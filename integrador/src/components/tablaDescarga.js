@@ -33,8 +33,8 @@ const TablaDescargas = (props) => {
             </Center>
           {/* </AspectRatio> */}
           <VStack bg="tomato" w="45%" justifyContent="space-evenly" alignItems="flex-start">
-            <Box> Titulo</Box>
-            <Box> Fecha</Box>
+            <Box>{props.titulo}</Box>
+            <Box>{props.fechaDescarga}</Box>
           </VStack>
             <VStack bg="tomato" w="45%" justifyContent="space-evenly">
               <Box justifyContent="center"> {/* FIXIT: Duele ese w */}
