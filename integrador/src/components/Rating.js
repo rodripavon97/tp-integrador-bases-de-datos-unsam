@@ -1,15 +1,20 @@
 //
-// Tomado de:
+// Adaptado de:
 //            https://codesandbox.io/s/y8zfo
 //
 
-import React, { useState } from "react";
+import React, { /* useState */ } from "react";
 import { Box, Stack } from "@chakra-ui/layout";
 import { StarIcon } from "@chakra-ui/icons";
 
 const Rating = React.forwardRef(
-  ({ size, icon, scale, fillColor, strokeColor, stackMy, initialValue }, ref) => {
-    const [rating, setRating] = useState(initialValue? initialValue : 0);
+  ({ size, scale, fillColor, strokeColor, stackMy, initialValue, rating, setRating }, ref) => {
+    //FIXIT: Refactorizar este componente, usar ref en vez de pasar el estado (que tira error)
+    if (rating === undefined && setRating === undefined) {
+      setRating = (val) => { rating = val }
+      rating = 0
+    }
+    setRating(initialValue)
     const buttons = [];
 
     const onClick = idx => {

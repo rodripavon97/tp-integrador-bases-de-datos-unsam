@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/button"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { useDisclosure } from "@chakra-ui/hooks"
 import { useToast } from "@chakra-ui/toast"
 import TablaDescargas from "../components/tablaDescarga"
@@ -11,9 +11,11 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Textarea
+  Textarea,
+  Alert,
+  AlertIcon
 } from "@chakra-ui/react"
-import { Box, Heading, HStack, VStack } from "@chakra-ui/layout"
+import { Box, Flex, Heading, HStack, VStack, Wrap, WrapItem } from "@chakra-ui/layout"
 import { FormControl, FormLabel } from "@chakra-ui/form-control"
 
 import Rating from "../components/Rating"
@@ -29,7 +31,12 @@ export default function MisDescargas() {
 
   const [descargasUsuario, setDescargasUsuario] = useState([])
 
+  const [erroresEncuesta, setErroresEncuesta] = useState([])
+
+  const [idDescargaEncuesta, setIdDescargaEncuesta] = useState(0)
   const [puntajeEncuesta, setPuntajeEncuesta] = useState(0)
+  const [tituloDescarga, setTituloDescarga] = useState('')
+  const [fechaDescarga, setFechaDescarga] = useState('')
   const [resPositivoDescarga, setResPositivoDescarga] = useState('')
   const [resNegativoDescarga, setResNegativoDescarga] = useState('')
   const [resPositivoPlataforma, setResPositivoPlataforma] = useState('')
@@ -37,7 +44,7 @@ export default function MisDescargas() {
 
   const toast = useToast()
 
-  const tryWithToast = (cb) => {
+  const tryWithToast = useCallback((cb) => {
     try {
       cb()
     } catch (error) {
@@ -50,7 +57,7 @@ export default function MisDescargas() {
         isClosable: true,
       })
     }
-  }
+  }, [toast])
 
   useEffect(() => {
     const traerDescargas = () => {
@@ -85,12 +92,17 @@ export default function MisDescargas() {
   }
 
     traerDescargas()
-  }, [])
+  }, [tryWithToast])
 
   function abrirModal (id_encuesta) {
     tryWithToast( async () => {
-      const encuestaDescargaJSON = await descargasService.getDescargasUsuario(ID_USUARIO_DEMO)
-      const encuestaDescarga = encuestaDescargaJSON.data.data
+      const encuestaDescargaJSON = await descargasService.getEncuestaDescarga(id_encuesta)
+      var encuestaDescarga = encuestaDescargaJSON.data.data
+      //console.log(encuestaDescarga)
+      encuestaDescarga = encuestaDescarga[0]
+      setIdDescargaEncuesta(id_encuesta)
+      setTituloDescarga(encuestaDescarga.titulo)
+      setFechaDescarga(encuestaDescarga.fechaDescarga)
       setPuntajeEncuesta(encuestaDescarga.puntajeGlobalEncuesta)
       setResPositivoDescarga(encuestaDescarga.resumenPositivoDescarga)
       setResNegativoDescarga(encuestaDescarga.resumenNegativoDescarga)
@@ -107,11 +119,31 @@ export default function MisDescargas() {
     // onOpen()
   }
 
+  function submitEncuesta() {
+    const errores = []
+    if (puntajeEncuesta <= 0) {
+      errores.push("Necesita poner un puntaje de 1 a 5 en la encuesta")
+    }
+    if (errores) {
+      setErroresEncuesta([...errores])
+      return
+    }
+    console.log(idDescargaEncuesta)
+    console.log(puntajeEncuesta)
+    console.log(tituloDescarga)
+    console.log(fechaDescarga)
+    console.log(resPositivoDescarga)
+    console.log(resNegativoDescarga)
+    console.log(resPositivoPlataforma)
+    console.log(resNegativoPlataforma)
+    onClose()
+  }
+
   return (
     <Box p={2} bg="green.800" minH="100%">
       <Heading textAlign="center" color="white" pt={6} pb={12}>Mis Encuestas</Heading>
 
-      {descargasUsuario.map( (desc) => <TablaDescargas idDescarga={desc.idDescarga} titulo={desc.titulo} fechaDescarga={desc.fechaDescarga} tipoContenido={desc.tipoContenido} puntajeEncuesta={desc.puntajeEncuesta} onButtonClick={() => abrirModal(desc.idDescarga)} /> )}
+      {descargasUsuario.map( (desc) => <TablaDescargas key={desc.idDescarga} idDescarga={desc.idDescarga} titulo={desc.titulo} fechaDescarga={desc.fechaDescarga} tipoContenido={desc.tipoContenido} puntajeEncuesta={desc.puntajeEncuesta} onButtonClick={() => abrirModal(desc.idDescarga)} /> )}
 
       {/* <TablaDescargas tipoContenido="Mus" puntajeEncuesta="5" />
       <TablaDescargas idDescarga="7" tipoContenido="Doc" puntajeEncuesta="2" onButtonClick={() => abrirModal(7)} />
@@ -125,16 +157,24 @@ export default function MisDescargas() {
       <Modal  isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent maxW="70vw">
-          <ModalHeader>Respondiendo encuesta sobre: "{`Titulo`}" (Fecha de Descarga: 12/11/2021)</ModalHeader>
+          <ModalHeader>Respondiendo encuesta sobre: "{tituloDescarga}" (Fecha de Descarga: {fechaDescarga})</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6} pt={0}>
             <VStack>
+              {erroresEncuesta.map( (err) =>
+                <Alert status="error">
+                  <AlertIcon />
+                  {err}
+                </Alert>
+              )}
               <Rating
                 size={4}
                 scale={5}
                 fillColor="gold"
                 strokeColor="black"
                 initialValue={puntajeEncuesta}
+                rating={puntajeEncuesta}
+                setRating={setPuntajeEncuesta}
               />
 
               <HStack spacing={6}>
@@ -144,6 +184,7 @@ export default function MisDescargas() {
                   </FormLabel>
                   <Textarea
                     value={resPositivoDescarga}
+                    onChange={(e) => setResPositivoDescarga(e.target.value)}
                     variant="outline"
                     borderColor="black"
                     maxLength={140}
@@ -157,6 +198,7 @@ export default function MisDescargas() {
                   </FormLabel>
                   <Textarea
                     value={resPositivoPlataforma}
+                    onChange={(e) => setResPositivoPlataforma(e.target.value)}
                     variant="outline"
                     borderColor="black"
                     maxLength={140}
@@ -172,6 +214,7 @@ export default function MisDescargas() {
                   </FormLabel>
                   <Textarea
                     value={resNegativoDescarga}
+                    onChange={(e) => setResNegativoDescarga(e.target.value)}
                     variant="outline"
                     borderColor="black"
                     maxLength={140}
@@ -186,6 +229,7 @@ export default function MisDescargas() {
                   </FormLabel>
                   <Textarea
                     value={resNegativoPlataforma}
+                    onChange={(e) => setResNegativoPlataforma(e.target.value)}
                     variant="outline"
                     borderColor="black"
                     maxLength={140}
@@ -197,10 +241,12 @@ export default function MisDescargas() {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3}>
-              Save
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
+            <Box>
+              <Button onClick={submitEncuesta} colorScheme="blue" mr={3}>
+                Save
+              </Button>
+              <Button onClick={onClose}>Cancel</Button>
+            </Box>
           </ModalFooter>
         </ModalContent>
       </Modal>
