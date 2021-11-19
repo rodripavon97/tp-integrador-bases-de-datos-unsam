@@ -15,7 +15,7 @@ import {
   Alert,
   AlertIcon
 } from "@chakra-ui/react"
-import { Box, Flex, Heading, HStack, VStack, Wrap, WrapItem } from "@chakra-ui/layout"
+import { Box, Heading, HStack, VStack } from "@chakra-ui/layout"
 import { FormControl, FormLabel } from "@chakra-ui/form-control"
 
 import Rating from "../components/Rating"
@@ -59,40 +59,39 @@ export default function MisDescargas() {
     }
   }, [toast])
 
-  useEffect(() => {
-    const traerDescargas = () => {
-      tryWithToast ( async () => {
-        const descargasUsuarioJSON = await descargasService.getDescargasUsuario(ID_USUARIO_DEMO)
-        //console.log(descargasUsuarioJSON)
-        const listaDescargas = []
-        for (var descarga of descargasUsuarioJSON.data.data) {
-          listaDescargas.push(descarga)
-        }
-        console.log(listaDescargas)
-        setDescargasUsuario([...listaDescargas])
-        // const pushearPanel = (panel, icono) => {
-        //   exportPanels.push({
-        //     title: panel.title,
-        //     value: panel.value,
-        //     icon: icono
-        //   })
-        // }
-        // const exportPanels = []
-        // for(panel of infoPanelsJSON.infoUsuarios) {
-        //   pushearPanel(panel, MdGroups)
-        // }
-        // for(panel of infoPanelsJSON.infoRutinas) {
-        //   pushearPanel(panel, FaDumbbell)
-        // }
-        // // console.log(infoPanels)
-        // setInfoPanels([...exportPanels])
-        // // console.log(infoPanels)
+  const traerDescargas = useCallback(() => {
+    tryWithToast ( async () => {
+      const descargasUsuarioJSON = await descargasService.getDescargasUsuario(ID_USUARIO_DEMO)
+      //console.log(descargasUsuarioJSON)
+      const listaDescargas = []
+      for (var descarga of descargasUsuarioJSON.data.data) {
+        listaDescargas.push(descarga)
       }
-    )
-  }
-
-    traerDescargas()
+      //console.log(listaDescargas)
+      setDescargasUsuario([...listaDescargas])
+      // const pushearPanel = (panel, icono) => {
+      //   exportPanels.push({
+      //     title: panel.title,
+      //     value: panel.value,
+      //     icon: icono
+      //   })
+      // }
+      // const exportPanels = []
+      // for(panel of infoPanelsJSON.infoUsuarios) {
+      //   pushearPanel(panel, MdGroups)
+      // }
+      // for(panel of infoPanelsJSON.infoRutinas) {
+      //   pushearPanel(panel, FaDumbbell)
+      // }
+      // // console.log(infoPanels)
+      // setInfoPanels([...exportPanels])
+      // // console.log(infoPanels)
+    })
   }, [tryWithToast])
+
+  useEffect(() => {
+    traerDescargas()
+  }, [traerDescargas])
 
   function abrirModal (id_encuesta) {
     tryWithToast( async () => {
@@ -124,26 +123,33 @@ export default function MisDescargas() {
     if (puntajeEncuesta <= 0) {
       errores.push("Necesita poner un puntaje de 1 a 5 en la encuesta")
     }
-    if (errores) {
+    if (errores.length > 0) {
       setErroresEncuesta([...errores])
       return
     }
-    console.log(idDescargaEncuesta)
-    console.log(puntajeEncuesta)
-    console.log(tituloDescarga)
-    console.log(fechaDescarga)
-    console.log(resPositivoDescarga)
-    console.log(resNegativoDescarga)
-    console.log(resPositivoPlataforma)
-    console.log(resNegativoPlataforma)
-    onClose()
+    try {
+      descargasService.enviarEncuestaDescarga(idDescargaEncuesta, {
+        "puntajeGlobalExperiencia": puntajeEncuesta,
+        "resPositivoDescarga": resPositivoDescarga,
+        "resNegativoDescarga": resNegativoDescarga,
+        "resPositivoPlataforma": resPositivoPlataforma,
+        "resNegativoPlataforma": resNegativoPlataforma
+      }, () => {
+        traerDescargas()
+        onClose()
+      })
+    } catch (e) {
+      errores.push("Problema con backend: " + e.message)
+      setErroresEncuesta([...errores])
+      return
+    }
   }
 
   return (
     <Box p={2} bg="green.800" minH="100%">
       <Heading textAlign="center" color="white" pt={6} pb={12}>Mis Encuestas</Heading>
 
-      {descargasUsuario.map( (desc) => <TablaDescargas key={desc.idDescarga} idDescarga={desc.idDescarga} titulo={desc.titulo} fechaDescarga={desc.fechaDescarga} tipoContenido={desc.tipoContenido} puntajeEncuesta={desc.puntajeEncuesta} onButtonClick={() => abrirModal(desc.idDescarga)} /> )}
+      {descargasUsuario.map( (desc) => <TablaDescargas key={desc.idDescarga} idDescarga={desc.idDescarga} titulo={desc.titulo} fechaDescarga={desc.fechaDescarga} tipoContenido={desc.tipoContenido} puntajeEncuesta={desc.puntajeEncuesta} onButtonClick={() => abrirModal(desc.idDescarga)} onDelete={traerDescargas} /> )}
 
       {/* <TablaDescargas tipoContenido="Mus" puntajeEncuesta="5" />
       <TablaDescargas idDescarga="7" tipoContenido="Doc" puntajeEncuesta="2" onButtonClick={() => abrirModal(7)} />
