@@ -2,6 +2,8 @@ import { HStack, VStack } from "@chakra-ui/react";
 import { SimpleGrid, Box } from "@chakra-ui/react";
 import { AspectRatio, Center } from "@chakra-ui/layout";
 import Botones from "../components/botones.js";
+import { StarIcon} from "@chakra-ui/icons";
+
 
 const TablaDescargas = () => {
   return (
@@ -18,7 +20,7 @@ const TablaDescargas = () => {
             <Box h="50%"> Fecha</Box>
           </VStack>
             <VStack bg="tomato" w="45%">
-              <Box h="50%"> Stars</Box>
+              <Box h="50%"> <StarIcon/></Box>
               <Box h="50%"> <Botones/> </Box>
             </VStack>
         </HStack>
