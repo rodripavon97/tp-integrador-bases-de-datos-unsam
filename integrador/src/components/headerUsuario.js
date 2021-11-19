@@ -1,5 +1,5 @@
 import { Avatar } from "@chakra-ui/avatar";
-import { Badge, Box, Flex, HStack, Text } from "@chakra-ui/layout";
+import {  Box, Flex, Text } from "@chakra-ui/layout";
 
 export default function HeaderUsuario () {
     return (

@@ -1,7 +1,7 @@
 import './App.css';
 import {ChakraProvider, List} from '@chakra-ui/react'
 import MisDescargas from './pages/MisDescargas';
-import { Box, Flex, HStack, ListItem, VStack } from '@chakra-ui/layout';
+import { Box, Flex, HStack, ListItem } from '@chakra-ui/layout';
 import HeaderUsuario from './components/headerUsuario';
 import {
   BrowserRouter as Router,
@@ -27,7 +27,7 @@ function App() {
                   <ListItem><Link to="/reporte">* Reporte de Descargas</Link></ListItem>
                 </List>
               </Box>
-              <Box h="100%" w="full" overflow="auto">
+              <Box maxH="100%" h="100%" w="full" overflow="auto">
                   <Switch>
                     <Route exact path="/">
                       <Redirect
