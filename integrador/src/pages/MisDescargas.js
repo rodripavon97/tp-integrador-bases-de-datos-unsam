@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/button";
 import React from "react";
-import { Box } from "@chakra-ui/layout";
+import { Box, HStack } from "@chakra-ui/layout";
 import TablaDescargas from "../components/tablaDescarga";
 import {
   Modal,
@@ -15,40 +15,51 @@ import { FormControl } from "@chakra-ui/form-control";
 import { FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { useDisclosure } from "@chakra-ui/hooks";
+import { Textarea } from "@chakra-ui/textarea";
 export default function MisDescargas() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box p={2} bg="green.800">
       <TablaDescargas />
       <Button onClick={onOpen}>...</Button>
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-      >
+      <Modal  isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxW="70vw">
           <ModalHeader>Create your account</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
+            <HStack spacing={6}>
+              <FormControl>
+                <FormLabel>
+                  ¿Que cosas positivas encontraste sobre la descarga?
+                </FormLabel>
+                <Textarea maxLength={140}  placeholder="..." />
+              </FormControl>
+
+              <FormControl mt={4}>
+                <FormLabel>
+                  ¿Que cosas positivas encontraste sobre la plataforma?
+                </FormLabel>
+                <Textarea maxLength={140} placeholder="..." />
+              </FormControl>
+            </HStack>
+
+            <HStack spacing={6}>
             <FormControl>
-              <FormLabel>¿Que cosas positivas encontraste sobre la descarga?</FormLabel>
-              <Input placeholder="..." />
+              <FormLabel>
+                ¿Que cosas negativas encontraste sobre la descarga?
+              </FormLabel>
+              <Textarea maxLength={140}  placeholder="..." />
+
             </FormControl>
 
-            <FormControl mt={4}>
-              <FormLabel>¿Que cosas positivas encontraste sobre la plataforma?</FormLabel>
-              <Input placeholder="..." />
-            </FormControl>
-
             <FormControl>
-              <FormLabel>¿Que cosas negativas encontraste sobre la descarga?</FormLabel>
-              <Input placeholder="..." />
+              <FormLabel>
+                ¿Que cosas negativas encontraste sobre la plataforma?
+              </FormLabel>
+              <Textarea maxLength={140} placeholder="..." />
             </FormControl>
-
-            <FormControl>
-              <FormLabel>¿Que cosas negativas encontraste sobre la plataforma?</FormLabel>
-              <Input placeholder="..." />
-            </FormControl>
+            </HStack>
           </ModalBody>
 
           <ModalFooter>
