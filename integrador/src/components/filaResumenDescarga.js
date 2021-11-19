@@ -1,19 +1,9 @@
 import {
   HStack,
-  VStack,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton
+  VStack
 } from "@chakra-ui/react";
-import { Box, Button } from "@chakra-ui/react";
 import { Center, Text } from "@chakra-ui/layout";
 import { FcDocument, FcMusic, FcClapperboard, FcLinux } from "react-icons/fc";
-import Rating from "./Rating.js";
-import { FaTrashAlt } from "react-icons/fa"
 import { Link } from "react-router-dom";
 
 
