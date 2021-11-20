@@ -77,8 +77,8 @@ const TablaDescargas = (props) => {
                 {
                   (props.puntajeEncuesta > 0) &&
                   <FaTrashAlt
-                    fontSize="1.5em"
-                    color="red"
+                    fontSize="2em"
+                    color="#f54c4c"
                     onClick={onOpen}
                   />
                 }
